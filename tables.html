@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        max-width: 100vw;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-wrap: wrap;
+        color: #444;
+        background-color: #eee;
+        overflow-x: clip;
+        max-width: 100%;
+        max-height: 100%;
+        height: 100%;
+      }
+
+      div#feedbackToolbar {
+        flex: 100%;
+        display: none;
+        justify-content: center;
+      }
+
+      div#feedbackToolbar:not(.visible) {
+        visibility: hidden;
+      }
+
+      div#feedbackToolbar.disp {
+        display: flex;
+      }
+
+      fieldset {
+        width: fit-content;
+      }
+
+      div#feedbackToolbar button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 10vw;
+        cursor: pointer;
+        flex: auto;
+      }
+
+      #ok {
+        background-color: #4caf50;
+      }
+
+      #nok {
+        background-color: #f44336;
+      }
+
+      #toolbar {
+        margin: auto;
+        text-align: center;
+      }
+
+      #toolbar fieldset,
+      #toolbar fieldset input[type="range"],
+      #toolbar button {
+        width: 100%;
+      }
+
+      #toolbar.hidden {
+        display: none;
+      }
+
+      input[type="checkbox"] {
+        width: 24px;
+        height: 24px;
+      }
+
+      #qIndex {
+        position: absolute;
+        right: 0px;
+        padding: 5px;
+        background: #fffb;
+        border-radius: 5px;
+      }
+
+      #main {
+        font-size: 10vw;
+        text-align: center;
+        font-family: monospace;
+        width: 100%;
+        align-self: center;
+      }
+
+      #endNotif {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: green;
+        opacity: 0.8;
+        transition: all 0.5s;
+        font-size: 10vw;
+        text-align: center;
+        color: white;
+      }
+
+      #endNotif.visible {
+        display: block;
+      }
+
+      #falseCalcNotif {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: blue;
+        opacity: 0.8;
+        transition: all 0.5s;
+        font-size: 10vw;
+        text-align: center;
+        color: white;
+        justify-content: space-around;
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility 0s, opacity 1s;
+      }
+
+      #falseCalcNotif.visible {
+        flex-direction: column;
+        align-items: center;
+        visibility: visible;
+        opacity: 0.9;
+        transition: visibility 0.5s, opacity 1s;
+      }
+      #falseCalcNotif div {
+        flex: 100%;
+      }
+
+      #tableSelector {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+      }
+      #tableSelector label {
+        margin-right: 10px;
+      }
+      button#startButton {
+        background-color: #4caf50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+      }
+    </style>
+    <!--<link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />-->
+    <!--<link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+    />
+    
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/holiday.css@0.11.0"
+    />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bullframe.css" />-->
+  </head>
+
+  <body>
+    <div id="toolbar">
+      <fieldset id="tableSelector">
+        <legend>Tables à reviser</legend>
+        <input type="checkbox" id="table1" name="table1" value="1" />
+        <label for="table1">1</label>
+        <input type="checkbox" id="table2" name="table2" value="2" />
+        <label for="table2">2</label>
+        <input type="checkbox" id="table3" name="table3" value="3" />
+        <label for="table3">3</label>
+        <input type="checkbox" id="table4" name="table4" value="4" />
+        <label for="table4">4</label>
+        <input type="checkbox" id="table5" name="table5" value="5" />
+        <label for="table5">5</label>
+        <input type="checkbox" id="table6" name="table6" value="6" />
+        <label for="table6">6</label>
+        <input type="checkbox" id="table7" name="table7" value="7" />
+        <label for="table7">7</label>
+        <input type="checkbox" id="table8" name="table8" value="8" />
+        <label for="table8">8</label>
+        <input type="checkbox" id="table9" name="table9" value="9" />
+        <label for="table9">9</label>
+        <input type="checkbox" id="table10" name="table10" value="10" />
+        <label for="table10">10</label>
+      </fieldset>
+      <fieldset>
+        <legend>Temps de réponse</legend>
+        <input
+          id="timeRange"
+          type="range"
+          id="time"
+          name="time"
+          min=".5"
+          max="5"
+          step="0.25"
+          value="2"
+        />
+        <p><output id="value"></output> s</p>
+      </fieldset>
+      <fieldset>
+        <legend>Nombre de calculs</legend>
+        <input
+          id="calculNumbers"
+          type="range"
+          id="calculNumbers"
+          name="calculNumbers"
+          min="5"
+          max="40"
+          step="5"
+          value="15"
+        />
+        <p><output id="valueNumbers"></output></p>
+      </fieldset>
+
+      <button id="startButton" disabled onclick="getOptions()">Démarrer</button>
+    </div>
+    <div id="qIndex"></div>
+    <div id="main"></div>
+    <div id="feedbackToolbar">
+      <button id="ok">✔</button>
+      <button id="nok">✘</button>
+    </div>
+    <div id="listenedAnswer"></div>
+    <div id="endNotif">✔</div>
+    <div id="falseCalcNotif">
+      <div>Correction</div>
+      <button onclick="startLearnFalse()">Prêt</button>
+    </div>
+
+    <script>
+      const ttsActive = true;
+      const value = document.querySelector("#value");
+      const input = document.querySelector("#timeRange");
+      value.textContent = input.value;
+      input.addEventListener("input", (event) => {
+        value.textContent = event.target.value;
+      });
+      const valueNr = document.querySelector("#valueNumbers");
+      const inputNr = document.querySelector("#calculNumbers");
+      valueNr.textContent = inputNr.value;
+      inputNr.addEventListener("input", (event) => {
+        valueNr.textContent = event.target.value;
+      });
+      document.querySelectorAll("input[type=checkbox]").forEach((cb) =>
+        cb.addEventListener("change", function () {
+          var checkboxes = document.querySelectorAll(
+            '#tableSelector input[type="checkbox"]'
+          );
+          var checkedOne = Array.prototype.slice
+            .call(checkboxes)
+            .some((x) => x.checked);
+          if (checkedOne) {
+            document.querySelector("#startButton").disabled = false;
+          } else {
+            document.querySelector("#startButton").disabled = true;
+          }
+        })
+      );
+
+      var result;
+      var nbJuste;
+      var nbFaux;
+      var q;
+      var qNr;
+      qNr = 0;
+
+      function SaveCalcToLocalStorage() {
+        var a = [];
+        // Parse the serialized data back into an aray of objects
+        a = JSON.parse(localStorage.getItem("areviser")) || [];
+        // Push the new data (whether it be an object or anything else) onto the array
+        calc = document.querySelector("#main").textContent;
+        a.push(calc);
+        a.push(calc);
+        a.push(calc);
+        // Re-serialize the array back into a string and store it in localStorage
+        localStorage.setItem("areviser", JSON.stringify(a));
+      }
+
+      function getOptions() {
+        choosenTable = [];
+        for (let i = 1; i <= 10; i++) {
+          if (document.querySelector("#table" + i).checked) {
+            choosenTable.push(i);
+          }
+        }
+        document.querySelector("#ok").addEventListener("click", function () {
+          setOk(choosenTable);
+        });
+        document.querySelector("#nok").addEventListener("click", function () {
+          setNok(choosenTable);
+        });
+        q = document.querySelector("#valueNumbers").textContent;
+        document.querySelector("#feedbackToolbar").classList.add("disp");
+        calculationDraw(choosenTable);
+      }
+
+      function calculationDraw(tables) {
+        if (q == qNr) {
+          console.log("in learnFalse mode");
+          document.querySelector("#falseCalcNotif").classList.add("visible");
+          q = 0;
+          return;
+        }
+        console.log({ q });
+        if (q == 0) {
+          learnFalse();
+          return;
+        }
+        qNr++;
+
+        document.querySelector("#qIndex").textContent = qNr + "/" + q;
+
+        document.querySelector("#toolbar").classList.add("hidden");
+        let a, b, question, reponse;
+        a = tables[Math.floor(Math.random() * tables.length)];
+        b = Math.floor(Math.random() * 10);
+        calculationDisplay(a, b);
+      }
+
+      function calculationDisplay(a, b) {
+        document.querySelector("#feedbackToolbar").classList.remove("visible");
+
+        console.log(a + "|" + b);
+        c = " ";
+        result = a * b;
+        let calculationDiv = document.querySelector("div#main");
+        question = a + " × " + b + " = " + c.repeat(result.toString().length);
+        calculationDiv.innerHTML = question;
+        if (ttsActive) {
+          tts(question);
+        }
+        setTimeout(function () {
+          reponse = a + " × " + b + " = " + result;
+          calculationDiv.innerHTML = reponse;
+          if (ttsActive) {
+            tts(result.toString());
+          }
+          document.querySelector("#feedbackToolbar").classList.add("visible");
+        }, value.textContent * 1000);
+      }
+
+      function tts(text) {
+        text = text.replace("×", "fois");
+        text = text.replace("=", "");
+        let parole = new SpeechSynthesisUtterance(text);
+        speechSynthesis.speak(parole);
+      }
+
+      function setOk(tables) {
+        nbJuste++;
+        calculationDraw(tables);
+      }
+      function setNok(tables) {
+        nbFaux++;
+        SaveCalcToLocalStorage();
+        calculationDraw(tables);
+      }
+      function startLearnFalse() {
+        document.querySelector("#falseCalcNotif").classList.remove("visible");
+        learnFalse();
+      }
+      function learnFalse() {
+        var lse = [];
+        lse = JSON.parse(localStorage.getItem("areviser")) || [];
+        if (lse.length == 0) {
+          complete();
+          return;
+        }
+
+        document.querySelector("#qIndex").textContent = lse.length;
+
+        var randomIndex = Math.floor(Math.random() * lse.length);
+        var randomFalseCalculation = lse[randomIndex];
+        let b = randomFalseCalculation.split("=")[0].split("×")[1];
+        let a = randomFalseCalculation.split("×")[0];
+        lse.splice(randomIndex, 1);
+        localStorage.setItem("areviser", JSON.stringify(lse));
+        console.log({ a });
+        console.log({ b });
+        calculationDisplay(a, b);
+      }
+
+      function complete() {
+        console.log("fin");
+        document.querySelector("#endNotif").classList.add("visible");
+        setTimeout(window.location.reload.bind(window.location), 5000);
+      }
+    </script>
+  </body>
+</html>
