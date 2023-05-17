@@ -1,3 +1,4 @@
+[DEMO](http://pgazaniol.free.fr/tables)
 
 # french Readme
 tables est une webapp pour apprendre les tables de multiplications.
