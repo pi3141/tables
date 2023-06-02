@@ -1,4 +1,4 @@
-[DEMO](http://pgazaniol.free.fr/tables)
+[DEMO](https://pi3141.github.io/tables)
 
 # Readme ([−> english](#english-readme))
 tables est une webapp pour apprendre les tables de multiplications.
