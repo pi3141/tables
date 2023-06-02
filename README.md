@@ -1,6 +1,6 @@
 [DEMO](http://pgazaniol.free.fr/tables)
 
-# Readme ([english below](#english-readme)]
+# Readme ([−> english](#english-readme))
 tables est une webapp pour apprendre les tables de multiplications.
 Un calcul s’affiche en même temps qu’il est lu par une synthèse vocale. Vous devez donner le résultat avant qu’il s’affiche. Vous indiquez ensuite si vous avez réussi ou non ce calcul. Le programme vous propose des calculs aléatoire puis à la fin vous entraîne sur les calculs qui vous ont été difficile.
 
