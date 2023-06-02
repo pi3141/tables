@@ -16,7 +16,7 @@ Un calcul s’affiche en même temps qu’il est lu par une synthèse vocale. Vo
 * Lorsque les calculs sont terminés, les calculs échoués sont repassé (deux fois).
 * Lorsque tout est validé la session se termine.
 
-# english Readme
+# Readme (english)
 
 tables is a webapp for learning multiplication table
 
