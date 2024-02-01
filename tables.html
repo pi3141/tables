@@ -648,7 +648,7 @@
         var theDate = currentTime.getDate() + '/' + (currentTime.getMonth() + 1) + '/' + currentTime.getFullYear()
         a.push(score + '|' + theDate);
         console.log({ a });
-        a.sort((el) => { Number(el.split('|')[0]); })
+        a.sort((el1,el2) => { Number(el1.split('|')[0]) - Number(el2.split('|')[0]) ; })
         a.reverse();
         a = a.slice(0, 8);
         // Re-serialize the array back into a string and store it in localStorage
